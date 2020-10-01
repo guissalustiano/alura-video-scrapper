@@ -50,6 +50,5 @@ Ficando no final:
 `$ node scrap.js --username=eu@email.com --pass="minhasenha" --mode=single --course=https://cursos.alura.com.br/course/android-testes-automatizados-tdd`
 
 ### Contribuições
-Se você gostou do projeto e quer contribuir com seu código ou com os desenvolvedores, envie um pull request ou um email para falecom@celsoinacio.com.br
 
 Desenvolvido com :heart: no vale tecnológico da Baixada Fluminense.
