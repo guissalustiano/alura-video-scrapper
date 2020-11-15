@@ -2,14 +2,14 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 const spawn = require('child_process').spawn;
 
-const username = 'jojo.guiss@hotmail.com';
-const password = '9KQJw)5_et';
-const urls_careers = ['https://cursos.alura.com.br/formacao-kafka'];
+const username = '';
+const password = '';
+const urls_careers = [];
 const urls_course = [];
 const urls_lesson = [];
 const videos = [];
 
-const GLOBAL_CONFIG = {ignoreHTTPSErrors:true, headless: false};
+const GLOBAL_CONFIG = {ignoreHTTPSErrors:true, headless: true};
 
 async function sleep(ms) {
   return new Promise(r => setTimeout(r, ms)); // não necessario, mas mais humano
@@ -24,27 +24,23 @@ async function main() {
   for(let url_careers of urls_careers) {
     let new_urls_course = await getCourses(page, url_careers);
     new_urls_course.forEach(course => urls_course.push(course));
+    await sleep(60000);
   };
   console.log("url_course:", urls_course);
 
   for(let url_course of urls_course) {
     let new_urls_lesson = await getLessons(page, url_course);
     new_urls_lesson.forEach(lesson => urls_lesson.push(lesson));
-    break;
+    await sleep(60000);
   };
   console.log("url_lesson:", urls_lesson);
   
   for(let url_lesson of urls_lesson) {
-    let new_video = await getVideo(page, url_lesson);
-    videos.push(new_video);
+    const video = await getVideo(page, url_lesson);
+    downloadVideo(video.url, video.path);
+    await sleep(60000);
   };
-  console.log("videos:", videos);
-
-  for(let video of videos) {
-    await downloadVideo(video.url, video.path);
-    await sleep(10000);
-  }
-  //browser.close();
+  browser.close();
 }
 
 const USERNAME_SELECTOR = '#login-email';
@@ -62,21 +58,21 @@ async function doLogin(page, username, password) {
   await page.click(PASSWORD_SELECTOR);
   await page.keyboard.type(password);
 
-  await sleep(1000);
+  await sleep(5000);
 
   console.log("[STATUS]: Tentando fazer login...");
   await page.click(BUTTON_SELECTOR);
-  await sleep(1000);
-  await page.waitForNavigation({
+  await sleep(5000);
+  /*await page.waitForNavigation({
     waitUntil: 'domcontentloaded',
-  });
+  });*/
 
   if (page.url() != DASHBOARD_URL)
     throw "Erro ao fazer o login";
 }
 
 async function getCourses(page, url_careers) {
-  await sleep(1000);
+  await sleep(5000);
   console.log("[STATUS]: Acessando a página da carreira: " + url_careers);
   await page.goto(url_careers, {waitUntil: 'domcontentloaded'});
 
@@ -88,7 +84,7 @@ async function getCourses(page, url_careers) {
 
   console.log('[STATUS]: Total de Cursors encontrados: ' + lessonHrefs.length);
 
-  await sleep(1000);
+  await sleep(5000);
   return lessonHrefs;
 }
 
@@ -98,7 +94,7 @@ async function getLessons(page, url_course) {
   
   console.log("[STATUS]: Iniciando curso...");
   await page.click('a.course-header-button.startContinue-button');
-  await sleep(1000);
+  await sleep(5000);
   if (!page.url().includes("/task/"))
     throw "Erro ao fazer ao acessar a pagina de videos";
 
@@ -117,7 +113,7 @@ async function getLessons(page, url_course) {
   for(let url_taks of urls_taks){
     console.log("[STATUS]: Acessando topico: " + url_taks);
     await page.goto(url_taks, {waitUntil: 'domcontentloaded'});
-    await sleep(3000);
+    await sleep(10000);
     const current_videos = await page.evaluate(
       () => Array.from(document.body.querySelectorAll('a.task-menu-nav-item-link.task-menu-nav-item-link-VIDEO'), ({href})=>href)
     );
