@@ -15,13 +15,15 @@ Baixe seus cursos e assista offline em dispositivos que não suportam a aplicaç
 
   Primeiro clone o repositório do projeto
 
-`$ git clone https://github.com/ceelsoin/alura-video-scrapper
+`$ git clone https://github.com/guissalustiano/alura-video-scrapper
 `
 
-   E então instale os modulos necessários
+  Instale os modulos necessários
 
 `$ npm install
 `
+
+  Então prencha as com suas credenciais e cursos pra baixar
 
 Para começar a baixar as aulas basta rodar o comando
 
